@@ -18,20 +18,13 @@ import LinkList from "./LinkList";
 import "semantic-ui-css/semantic.min.css";
 
 const SearchLink = () => {
-	const { onChange, onSubmit, values } = useForm(executeSearchCallback, {
+	const [executeSearch, { data: data_feed }] = useLazyQuery(FEED_QUERY);
+	const { onChange, onSubmit, values } = useForm(executeSearch, {
 		filter: "",
-		type: "",
+		type: null,
 		tagIds: [],
 		// sortBy: {},
 	});
-
-	const [executeSearch, { data: data_feed }] = useLazyQuery(FEED_QUERY, {
-		variables: values,
-	});
-
-	if (values.type === "") {
-		values.type = null;
-	}
 
 	const { loading, error, data } = useQuery(TAGS_QUERY);
 	const { loading: loadingQ, error: errorQ, data: dataQ } = useQuery(
@@ -77,10 +70,6 @@ const SearchLink = () => {
 		});
 	} else {
 		options = "OPTIONS";
-	}
-
-	function executeSearchCallback() {
-		executeSearch();
 	}
 
 	return (
